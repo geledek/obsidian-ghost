@@ -1,0 +1,16 @@
+# build output (we commit main.js for Obsidian plugin distribution, but ignore map)
+# main.js
+main.js.map
+
+# deps
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace

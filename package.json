@@ -1,0 +1,27 @@
+{
+	"name": "obsidian-ghost",
+	"version": "0.1.0",
+	"description": "Inline AI ghost text for Obsidian Markdown — Copilot-like experience with your own models.",
+	"main": "main.js",
+	"type": "module",
+	"scripts": {
+		"dev": "node esbuild.config.mjs",
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"version": "node version-bump.mjs && git add manifest.json versions.json"
+	},
+	"keywords": [
+		"obsidian",
+		"ai",
+		"copilot",
+		"autocomplete",
+		"ghost-text",
+		"inline-completion"
+	],
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^22.15.17",
+		"esbuild": "0.25.5",
+		"obsidian": "latest",
+		"typescript": "^5.8.3"
+	}
+}

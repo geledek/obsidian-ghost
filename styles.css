@@ -1,0 +1,28 @@
+/* Ghost text styling - Copilot-like faded inline suggestion */
+.cm-ghost-text {
+  color: var(--text-muted);
+  opacity: 0.58;
+  font-style: italic;
+  font-weight: 400;
+  pointer-events: none;
+  user-select: none;
+  /* Make it feel like it's not really there until accepted */
+  white-space: pre-wrap;
+  /* Subtle left border like some Copilot UIs */
+  border-left: 2px solid var(--text-faint);
+  padding-left: 4px;
+  margin-left: 1px;
+}
+
+/* Slightly stronger in source mode / when needed */
+.cm-ghost-text.cm-ghost-text-multiline {
+  display: inline;
+}
+
+/* Optional: subtle indicator that a suggestion is loading */
+.ghost-status {
+  font-size: 12px;
+  color: var(--text-muted);
+  opacity: 0.7;
+  margin-left: 8px;
+}
