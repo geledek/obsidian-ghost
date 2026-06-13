@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sample Deck</title>
+    <style>
+      :root {
+        --ink: #14181f;
+        --muted: #5b6473;
+        --accent: #6366f1;
+        --bg: #f7f8fc;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; }
+      body {
+        font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+        scroll-snap-type: y mandatory;
+        overflow-y: auto;
+        height: 100vh;
+      }
+      .slide {
+        scroll-snap-align: start;
+        min-height: 100vh;
+        padding: 8vh 10vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-bottom: 1px solid #e6e8f0;
+      }
+      .slide.title { background: linear-gradient(135deg, #eef0ff 0%, #f7f8fc 60%); }
+      .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--accent);
+        margin: 0 0 18px;
+      }
+      h1 { font-size: 58px; line-height: 1.05; margin: 0 0 18px; }
+      h2 { font-size: 40px; margin: 0 0 28px; }
+      p { font-size: 22px; line-height: 1.6; color: var(--muted); max-width: 60ch; }
+      ul { font-size: 22px; line-height: 1.9; color: var(--ink); max-width: 60ch; }
+      li::marker { color: var(--accent); }
+      .cards { display: flex; gap: 24px; margin-top: 24px; flex-wrap: wrap; }
+      .card {
+        flex: 1 1 220px;
+        background: #fff;
+        border: 1px solid #e6e8f0;
+        border-radius: 14px;
+        padding: 24px;
+        box-shadow: 0 8px 24px rgba(20, 24, 31, 0.04);
+      }
+      .card h3 { margin: 0 0 8px; font-size: 20px; }
+      .card p { font-size: 16px; margin: 0; }
+      .num { font-size: 13px; color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <section class="slide title">
+      <p class="eyebrow">LiveDeck Demo</p>
+      <h1>HTML slides you can edit by clicking</h1>
+      <p>This is a plain, self-contained HTML deck — exactly what Claude Code generates. Open it in LiveDeck and edit any text directly, like PowerPoint.</p>
+    </section>
+
+    <section class="slide">
+      <h2>The problem</h2>
+      <ul>
+        <li>Generating a deck is easy — iterating on it is not.</li>
+        <li>You either re-prompt the model or hand-edit raw HTML.</li>
+        <li>There's no intuitive, what-you-see-is-what-you-get way to nudge a word.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>What LiveDeck adds</h2>
+      <div class="cards">
+        <div class="card">
+          <p class="num">01</p>
+          <h3>Click to edit</h3>
+          <p>Click any heading, bullet, or paragraph and type. No syntax.</p>
+        </div>
+        <div class="card">
+          <p class="num">02</p>
+          <h3>Stays plain HTML</h3>
+          <p>Your edits save straight back to the same file Claude can read.</p>
+        </div>
+        <div class="card">
+          <p class="num">03</p>
+          <h3>Live two-way sync</h3>
+          <p>Re-prompt in Claude Code and watch the slide update instantly.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Try it now</h2>
+      <p>Hover a line — it highlights. Click it — type your change. It autosaves to <strong>deck.html</strong>. Then edit this file from Claude Code and watch this view reload on its own.</p>
+    </section>
+  </body>
+</html>

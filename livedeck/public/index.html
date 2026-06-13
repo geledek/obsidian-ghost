@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LiveDeck — WYSIWYG HTML slide editor</title>
+    <style>
+      :root {
+        --bg: #0f1117;
+        --panel: #171a23;
+        --border: #2a2f3a;
+        --text: #e6e8ee;
+        --muted: #8b91a1;
+        --accent: #6366f1;
+        --ok: #34d399;
+        --dirty: #fbbf24;
+        --err: #f87171;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; margin: 0; }
+      body {
+        font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--border);
+        flex: none;
+      }
+      .brand { font-weight: 700; letter-spacing: 0.2px; }
+      .brand span { color: var(--accent); }
+      .sep { width: 1px; height: 22px; background: var(--border); margin: 0 4px; }
+      button {
+        font: inherit;
+        color: var(--text);
+        background: #20242f;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 6px 11px;
+        cursor: pointer;
+      }
+      button:hover { background: #272c39; }
+      button:disabled { opacity: 0.45; cursor: default; }
+      button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+      button.icon { width: 34px; font-weight: 700; }
+      .spacer { flex: 1; }
+      #status {
+        font-size: 12.5px;
+        color: var(--muted);
+        padding: 4px 10px;
+        border-radius: 6px;
+        background: #1c2029;
+      }
+      #status[data-kind="ok"] { color: var(--ok); }
+      #status[data-kind="dirty"] { color: var(--dirty); }
+      #status[data-kind="err"] { color: var(--err); }
+      .stage-wrap { flex: 1; position: relative; background: #0a0c11; }
+      #stage { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
+      .hint {
+        position: absolute;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(20, 23, 31, 0.92);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand">Live<span>Deck</span></div>
+      <div class="sep"></div>
+      <button id="bold" class="icon" title="Bold (Cmd/Ctrl+B)"><b>B</b></button>
+      <button id="italic" class="icon" title="Italic (Cmd/Ctrl+I)"><i>I</i></button>
+      <div class="sep"></div>
+      <button id="reload" title="Reload deck from disk">Reload</button>
+      <button id="save" class="primary" disabled title="Save (Cmd/Ctrl+S)">Save</button>
+      <div class="spacer"></div>
+      <div id="status" data-kind="">Loading…</div>
+    </header>
+    <div class="stage-wrap">
+      <iframe id="stage" title="Slide canvas"></iframe>
+      <div class="hint">Click any text to edit it — like PowerPoint, but it stays plain HTML.</div>
+    </div>
+    <script src="/app.js"></script>
+  </body>
+</html>

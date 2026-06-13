@@ -1,0 +1,14 @@
+{
+  "name": "livedeck",
+  "version": "0.1.0",
+  "description": "WYSIWYG editor for plain HTML slide decks — click to edit, with live two-way sync to disk.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node server.mjs"
+  },
+  "bin": {
+    "livedeck": "server.mjs"
+  },
+  "license": "MIT"
+}
