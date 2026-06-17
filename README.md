@@ -169,7 +169,7 @@ You can:
 - [ ] Vault-aware context (pull relevant notes via simple search or embeddings you already have)
 - [ ] Fill-in-the-middle (FIM) for models that support it (better mid-sentence suggestions)
 - [ ] Per-style system prompts (journal, meeting notes, technical writing, fiction...)
-- [ ] Accept word / accept line hotkeys (like real Copilot)
+- [x] Accept word / accept line hotkeys (like real Copilot)
 - [ ] Citation of where an idea came from (if using RAG)
 - [ ] Mobile toolbar support for accept
 
