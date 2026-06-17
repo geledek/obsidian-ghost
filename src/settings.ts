@@ -191,25 +191,33 @@ export class GhostSettingTab extends PluginSettingTab {
 	private renderAnthropic(c: HTMLElement): void {
 		const s = this.plugin.settings;
 
-		new Setting(c).setName('Base URL').addText((t) =>
-			t
-				.setPlaceholder('https://api.anthropic.com')
-				.setValue(s.anthropicBaseUrl)
-				.onChange(async (v) => {
-					s.anthropicBaseUrl = v.trim();
-					await this.save();
-				}),
-		);
+		new Setting(c)
+			.setName('Base URL')
+			.setDesc(
+				'Official API or a custom/local Anthropic-compatible endpoint, e.g. http://localhost:8080. The /v1/messages path is added automatically.',
+			)
+			.addText((t) =>
+				t
+					.setPlaceholder('https://api.anthropic.com')
+					.setValue(s.anthropicBaseUrl)
+					.onChange(async (v) => {
+						s.anthropicBaseUrl = v.trim();
+						await this.save();
+					}),
+			);
 
-		new Setting(c).setName('API key').addText((t) => {
-			t.setPlaceholder('sk-ant-…')
-				.setValue(s.anthropicApiKey)
-				.onChange(async (v) => {
-					s.anthropicApiKey = v.trim();
-					await this.save();
-				});
-			t.inputEl.type = 'password';
-		});
+		new Setting(c)
+			.setName('API key')
+			.setDesc('Leave blank for a local proxy that does not require a key.')
+			.addText((t) => {
+				t.setPlaceholder('sk-ant-… (optional for localhost)')
+					.setValue(s.anthropicApiKey)
+					.onChange(async (v) => {
+						s.anthropicApiKey = v.trim();
+						await this.save();
+					});
+				t.inputEl.type = 'password';
+			});
 
 		new Setting(c)
 			.setName('Model')

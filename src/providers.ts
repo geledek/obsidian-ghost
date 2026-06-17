@@ -45,6 +45,19 @@ function trimSlash(url: string): string {
 }
 
 /**
+ * Build the Anthropic `messages` endpoint, tolerant of custom/localhost bases:
+ *   http://localhost:8080            -> http://localhost:8080/v1/messages
+ *   http://localhost:8080/v1         -> http://localhost:8080/v1/messages
+ *   http://localhost:8080/v1/messages-> http://localhost:8080/v1/messages
+ */
+function anthropicMessagesUrl(baseUrl: string): string {
+	const base = trimSlash(baseUrl);
+	if (base.endsWith('/messages')) return base;
+	if (base.endsWith('/v1')) return `${base}/messages`;
+	return `${base}/v1/messages`;
+}
+
+/**
  * Run a completion against the configured provider and return the full text.
  * When `settings.streaming` is true and `req.onToken` is provided, chunks are
  * delivered incrementally as they arrive (and the full text is still returned).
@@ -108,14 +121,15 @@ async function completeAnthropic(
 	s: ProviderSettings,
 	req: CompletionRequest,
 ): Promise<string> {
-	const url = `${trimSlash(s.anthropicBaseUrl)}/v1/messages`;
+	const url = anthropicMessagesUrl(s.anthropicBaseUrl);
 	const headers: Record<string, string> = {
 		'Content-Type': 'application/json',
-		'x-api-key': s.anthropicApiKey,
 		'anthropic-version': '2023-06-01',
 		// Required for Anthropic to accept requests from a browser/Electron origin.
 		'anthropic-dangerous-direct-browser-access': 'true',
 	};
+	// Local/proxy endpoints often need no key; only send one when provided.
+	if (s.anthropicApiKey) headers['x-api-key'] = s.anthropicApiKey;
 
 	const body = {
 		model: s.anthropicModel,
