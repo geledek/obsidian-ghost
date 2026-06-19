@@ -18,6 +18,7 @@ import {
 import { Notice } from 'obsidian';
 import type GhostPlugin from './main';
 import { complete } from './providers';
+import { SYSTEM_PROMPT_LENGTH_HINTS } from './settings';
 
 /** The current inline suggestion: faded `text` shown starting at doc offset `from`. */
 interface GhostState {
@@ -205,13 +206,13 @@ class GhostManager {
 					? (chunk) => {
 							if (controller.signal.aborted) return;
 							acc += chunk;
-							const clean = cleanCompletion(acc);
+							const clean = cleanCompletion(acc, s.completionLength);
 							if (clean) this.setGhost(pos, clean);
 						}
 					: undefined,
 			});
 			if (controller.signal.aborted) return;
-			const clean = cleanCompletion(result);
+			const clean = cleanCompletion(result, s.completionLength);
 			if (clean) this.setGhost(pos, clean);
 			else {
 				this.clearGhost();
@@ -338,11 +339,8 @@ function buildPrompt(
 	plugin: GhostPlugin,
 	pos: number,
 ): { prompt: string; contextText: string } {
-	const { heading, text } = currentSection(
-		state,
-		pos,
-		plugin.settings.maxContextChars,
-	);
+	const s = plugin.settings;
+	const { heading, text } = currentSection(state, pos, s.maxContextChars);
 	const file = plugin.app.workspace.getActiveFile();
 	const title = file ? file.basename : 'Untitled';
 
@@ -352,6 +350,7 @@ function buildPrompt(
 	lines.push(
 		'Continue the following Markdown text from exactly where it ends. Do not repeat any of it.',
 	);
+	lines.push(`(${SYSTEM_PROMPT_LENGTH_HINTS[s.completionLength]})`);
 	lines.push('');
 	lines.push(text);
 
@@ -382,12 +381,24 @@ function currentSection(
 	return { heading, text };
 }
 
-/** Strip a code fence the model may have wrapped the completion in. */
-function cleanCompletion(text: string): string {
+/** Strip a code fence the model may have wrapped the completion in, then truncate per setting. */
+function cleanCompletion(text: string, length: GhostPlugin['settings']['completionLength']): string {
 	const trimmed = text.trim();
 	const fence = /^```[a-zA-Z0-9]*\n([\s\S]*?)\n?```$/.exec(trimmed);
-	if (fence) return fence[1] ?? '';
-	return text;
+	const clean = fence ? (fence[1] ?? '') : text;
+	if (length === 'sentence') return truncateToSentence(clean);
+	if (length === 'line') return truncateToLine(clean);
+	return clean;
+}
+
+function truncateToSentence(text: string): string {
+	const m = /^.*?[.!?](?:\s|$)/.exec(text);
+	return m ? m[0] : text;
+}
+
+function truncateToLine(text: string): string {
+	const nl = text.indexOf('\n');
+	return nl === -1 ? text : text.slice(0, nl);
 }
 
 // ---------------------------------------------------------------------------
