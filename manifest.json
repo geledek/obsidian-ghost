@@ -1,7 +1,7 @@
 {
 	"id": "ghost",
 	"name": "Ghost",
-	"version": "0.1.0",
+	"version": "0.3.0-dev",
 	"minAppVersion": "1.5.0",
 	"description": "Inline AI ghost text completions for Markdown. Like VS Code Copilot, but for Obsidian. Supports API keys (OpenAI, Groq, Anthropic, xAI, etc) and local models (Ollama, LM Studio, etc).",
 	"author": "geledek",
