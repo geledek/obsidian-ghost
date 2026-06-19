@@ -2,6 +2,8 @@ import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
 import type GhostPlugin from './main';
 import { ProviderSettings, ProviderType, testConnection } from './providers';
 
+export type CompletionLength = 'sentence' | 'line' | 'paragraph';
+
 /** Full persisted plugin settings (provider config + ghost-text behavior). */
 export interface GhostSettings extends ProviderSettings {
 	/** Master on/off for the plugin. */
@@ -18,6 +20,8 @@ export interface GhostSettings extends ProviderSettings {
 	triggerInCode: boolean;
 	/** Allow auto-triggering inside math (`$...$` / `$$...$$`). */
 	triggerInMath: boolean;
+	/** How much of the model output to show. */
+	completionLength: CompletionLength;
 	/** System prompt steering the model's writing style. */
 	systemPrompt: string;
 }
@@ -29,9 +33,15 @@ export const DEFAULT_SYSTEM_PROMPT = [
 	'- Output ONLY the continuation text. Do not repeat text that comes before the cursor.',
 	'- Do not add explanations, quotes, or code fences around your answer.',
 	'- Match the existing tone, voice, formatting, and Markdown style.',
-	'- Keep it concise: a phrase, sentence, or at most a short paragraph.',
+	'- Keep it concise: one sentence. Never output more than one sentence.',
 	'- If the cursor is mid-word or mid-sentence, continue seamlessly.',
 ].join('\n');
+
+export const SYSTEM_PROMPT_LENGTH_HINTS: Record<CompletionLength, string> = {
+	sentence: '- Keep it concise: one sentence. Never output more than one sentence.',
+	line: '- Keep it concise: complete the current line only. Do not start a new line.',
+	paragraph: '- Keep it concise: a phrase, sentence, or at most a short paragraph.',
+};
 
 export const DEFAULT_SETTINGS: GhostSettings = {
 	provider: 'openai',
@@ -58,6 +68,7 @@ export const DEFAULT_SETTINGS: GhostSettings = {
 	maxContextChars: 2000,
 	triggerInCode: false,
 	triggerInMath: false,
+	completionLength: 'sentence',
 	systemPrompt: DEFAULT_SYSTEM_PROMPT,
 };
 
@@ -395,6 +406,21 @@ export class GhostSettingTab extends PluginSettingTab {
 				await this.save();
 			}),
 		);
+
+		new Setting(c)
+			.setName('Completion length')
+			.setDesc('How much text to show per suggestion.')
+			.addDropdown((d) =>
+				d
+					.addOption('sentence', 'Sentence')
+					.addOption('line', 'Line')
+					.addOption('paragraph', 'Paragraph')
+					.setValue(s.completionLength)
+					.onChange(async (v) => {
+						s.completionLength = v as CompletionLength;
+						await this.save();
+					}),
+			);
 	}
 
 	private renderPrompt(c: HTMLElement): void {
